@@ -1,7 +1,5 @@
 package main
 
-import "github.com/mansonxasthur/book-collection/pkg/env"
-
 type dbConfig struct {
 	Driver string
 	Host   string
@@ -19,10 +17,9 @@ type Config struct {
 	DB  dbConfig
 }
 
-func NewConfig() *Config {
-	environment := env.GetString("APP_ENV", envDev)
+func NewConfig(env string, db dbConfig) *Config {
 	return &Config{
-		ENV: environment,
-		DB:  dbConfig{},
+		ENV: env,
+		DB:  db,
 	}
 }
