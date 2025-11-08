@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boocol
+  labels:
+    app: boocol
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: boocol
+  template:
+    metadata:
+      name: boocol
+      labels:
+        app: boocol
+    spec:
+      containers:
+        - name: boocol
+          image: boocol/api
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: APP_ENV
+                  name: boocol-app-configs
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_HOST
+                  name: boocol-app-configs
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_PORT
+                  name: boocol-app-configs
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_NAME
+                  name: boocol-app-configs
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_USER
+                  name: boocol-app-secrets
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: boocol-app-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: boocol
+spec:
+  type: LoadBalancer
+  selector:
+    app: boocol
+  ports:
+    - port: 8080
+      targetPort: 8080

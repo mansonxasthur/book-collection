@@ -41,8 +41,7 @@ func (r *UserRepository) Save(ctx context.Context, u *user.User) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.users[u.ID()] = *u
-
-	fmt.Printf("User saved: %+v\n", u)
+	fmt.Printf("User saved: %v\n", u.Email())
 	return nil
 }
 
